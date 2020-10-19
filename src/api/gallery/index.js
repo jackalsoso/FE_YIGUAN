@@ -15,7 +15,7 @@ export default {
     return http.post(`${BASEURL}/visit/hang`,params);
   },
   //画展增幅
-  galleryAdd(params) {
+  galleryAddOrEdit(params) {
     return http.post(`${BASEURL}/works/hang`,params);
   },
 

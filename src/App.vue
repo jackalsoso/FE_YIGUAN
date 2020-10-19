@@ -8,6 +8,7 @@
 </template>
 
 <script>
+  import Login from "@/api/gallery/index";
 	export default {
 		name: 'App',
 		data() {
@@ -15,11 +16,23 @@
 
 			}
 		},
-		mounted(){
-      
+		created(){
+      this.init();
     },
 		methods: {
-      
+      init(){
+        console.log('app')
+        uniReady(function () {
+            $abAct("login", 1, function (err, token) {
+              console.log('11',token)
+                Login.login().then( res => {
+                  let histToken = localStorage.getItem("token");
+                  let currToken = res[1].token;
+                  localStorage.setItem("token", histToken || currToken);
+                });
+            });
+        });
+      },
     },
     
 	}
@@ -162,6 +175,7 @@
           background-color: #fff;
           margin-bottom: 10px;
           span{
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;

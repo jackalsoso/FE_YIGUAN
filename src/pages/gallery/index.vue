@@ -48,7 +48,7 @@ export default {
     init(){
       Gallery.galleryList([ { keywords: '' },0,10 ]).then( res => {
         res[1].map((item) => {
-          item.image = window['imgUrl'] + item.image;
+          item.image = window['ossImgUrl'] + item.image;
         });
         this.boxList = res[1];
       });
