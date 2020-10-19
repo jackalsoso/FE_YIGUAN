@@ -14,7 +14,7 @@
     </div>
     <div class="hint-wrap">
       <div class="hint">
-        <span>每次最多上传<i>6</i>/40张，单张文件不超过30MB</span>
+        <span>每次最多上传<i>9</i>/40张，单张文件不超过30MB</span>
         <img
           src="@/static/img/select-hl.png"
           alt=""
@@ -23,13 +23,13 @@
       </div>
     </div>
     <div class="list-wrap">
-      <div class="list" v-for="v in 12" :key="v">
+      <div class="list" v-for="(v,i) in work_list" :key="i">
         <div class="img">
-          <img src="@/static/img/item-1.jpeg" alt="" />
+          <img :src="ossImgUrl+v.image" alt="" />
         </div>
         <div class="cont">
           <div class="o">
-            <span class="l"><i>标题：</i><a>红至高</a></span>
+            <span class="l"><i>标题：</i><a>{{v.title}}</a></span>
             <span class="r">
               <img
                 src="@/static/img/u-edit.png"
@@ -39,9 +39,9 @@
               <img src="@/static/img/u-del.png" alt="" />
             </span>
           </div>
-          <div class="t"><i>分类：</i><a>人物</a></div>
-          <div class="t"><i>详情：</i><a>风格写实，神情生动......</a></div>
-          <div class="t"><i>价格：</i><a>¥2500</a></div>
+          <div class="t"><i>分类：</i><a>{{v.catId}}</a></div>
+          <div class="t"><i>详情：</i><a>{{v.desc}}</a></div>
+          <div class="t"><i>价格：</i><a>¥{{v.price}}</a></div>
         </div>
       </div>
     </div>
@@ -64,8 +64,12 @@
     >
       <div class="bottom">
         <div class="options">
-          <span>现场拍照</span>
-          <span>相册选择</span>
+          <span>现场拍照
+            <!-- <van-uploader capture :after-read="takePhoto" /> -->
+          </span>
+          <span>相册选择
+            <upload-img @uploadData="uploadData" />
+          </span>
           <span>......</span>
         </div>
         <div class="button" @click.stop="closeAddPop">
@@ -120,8 +124,13 @@
 </template>
 
 <script>
+import Gallery from '@/api/gallery/index';
+import uploadImg from '@/components/uploadImg';
 export default {
   name: "upload",
+  components: {
+    uploadImg,
+  },
   data() {
     return {
       isShowProgress: false,
@@ -137,10 +146,23 @@ export default {
         { id: 4, size: "162×130" },
       ],
       nuw:0,
+      ossImgUrl: '',
+      work_list: [],
     };
   },
-  created() {},
+  created() {
+    this.ossImgUrl = window['ossImgUrl'];
+    this.init();
+  },
   methods: {
+    uploadData(data){
+      console.log('oss-data',data);
+    },
+    init(){
+      Gallery.galleryDetail([1]).then( res => {
+        this.work_list = res[1].picturies;
+      });
+    },
     // 打开添加弹窗
     addImg() {
       this.isShowAdd = true;

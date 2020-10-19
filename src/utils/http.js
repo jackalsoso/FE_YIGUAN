@@ -7,12 +7,7 @@ axios.interceptors.request.use((config) => {
   // if(config.method === 'get'){
   //   axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
   // }
-  let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-  if(userInfo){
-    config.headers['token'] = userInfo.token;
-  }else{
-    config.headers['token'] = '8cb71cee69ab0c840d3efcafdbeefa0f';
-  }
+  config.headers['token'] = localStorage.getItem('token');
   return config
 }, (error) => {
   return Promise.reject(error)
