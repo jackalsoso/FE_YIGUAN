@@ -7,7 +7,7 @@ axios.interceptors.request.use((config) => {
   // if(config.method === 'get'){
   //   axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
   // }
-  config.headers['token'] = localStorage.getItem('token');
+  config.headers['atoken'] = localStorage.getItem('token');
   return config
 }, (error) => {
   return Promise.reject(error)

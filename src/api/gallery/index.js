@@ -18,6 +18,8 @@ export default {
   galleryAddOrEdit(params) {
     return http.post(`${BASEURL}/works/hang`,params);
   },
-
-  
+  //oss
+  galleryPolicy(params) {
+    return http.post(`${BASEURL}/works/policy`,params);
+  },
 }

@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios';
+import Api from "@/api/gallery/index";
 import Exif from 'exif-js'
 export default {
   name: 'upload',
@@ -23,13 +23,9 @@ export default {
   },
   methods: {
     beforeUpload(){
-      axios.post(this.ossUrl,{
-        headers: {
-          "atoken": localStorage.getItem('token')
-        }
-      }).then( res => {
-        console.log('ossdata',res)
-        this.ossData = res.data;
+      let params = ['jpg']
+      Api.galleryPolicy(params).then(res => {
+        debugger
       });
     },
     // 组件方法 获取 流
@@ -253,4 +249,3 @@ export default {
     margin: 0;
   }
 </style>
-

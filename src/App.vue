@@ -8,7 +8,7 @@
 </template>
 
 <script>
-  import Login from "@/api/gallery/index";
+  import Api from "@/api/gallery/index";
 	export default {
 		name: 'App',
 		data() {
@@ -21,20 +21,21 @@
     },
 		methods: {
       init(){
-        console.log('app')
         uniReady(function () {
             $abAct("login", 1, function (err, token) {
-              console.log('11',token)
-                Login.login().then( res => {
-                  let histToken = localStorage.getItem("token");
-                  let currToken = res[1].token;
-                  localStorage.setItem("token", histToken || currToken);
+              	console.log('平台token',token)
+								let params = [token, true]
+                Api.login(params).then( res => {
+									console.log('项目token',res)
+									let _token = res[1].token,
+									_userInfo = res[1].account
+									localStorage.setItem("token", _token);
+									localStorage.setItem("userInfo", JSON.stringify(_userInfo));
                 });
             });
         });
       },
     },
-    
 	}
 </script>
 
@@ -184,7 +185,7 @@
             font-size: 16px;
             color: #000;
             &:last-child{
-              border-bottom: none; 
+              border-bottom: none;
             }
             i{
               width: 110px;
@@ -220,7 +221,7 @@
           color: #007AFF;
           text-align: center;
           &:first-child{
-            border-right: 1px solid #DEDEDE; 
+            border-right: 1px solid #DEDEDE;
           }
         }
       }

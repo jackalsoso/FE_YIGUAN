@@ -200,7 +200,6 @@ export default {
     },
     click() {
       //定义定时器开始时间为0
-
       var progressnuw = 0; //顶一个定时器
 
       var timer = setInterval(() => {
@@ -210,7 +209,7 @@ export default {
 
         if (progressnuw >= 100) {
           clearInterval(timer);
-          this.$router.push('/showGallery')
+          // this.$router.push('/showGallery')
         } //获取重新赋值
 
         this.nuw = progressnuw;
