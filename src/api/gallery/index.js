@@ -22,4 +22,9 @@ export default {
   galleryPolicy(params) {
     return http.post(`${BASEURL}/works/policy`,params);
   },
+  //画作分类
+  galleryClassify(params) {
+    return http.post(`${BASEURL}/entry/cats`,params);
+  },
+
 }

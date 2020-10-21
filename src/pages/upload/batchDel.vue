@@ -9,32 +9,60 @@
     </div>
     <div class="top-bg"></div>
     <div class="list-wrap">
-      <div class="list" v-for="(v,i) in list" :key="i">
+      <!-- 原始数据 -->
+      <div class="list" v-for="v in work_list" :key="v.image">
         <div class="img">
-          <img src="@/static/img/item-1.jpeg" alt="">
+          <img :src="v.image" alt="">
         </div>
         <div class="cont">
           <div class="o">
-            <span class="l"><i>标题：</i><a>红至高</a></span>
+            <span class="l"><i>标题：</i><a>{{v.title}}</a></span>
             <span class="r">
-              <img src="@/static/img/gouxuan.png" alt="" v-show="v.checked" @click="choose(v,false)">
-              <img src="@/static/img/no-gouxuan.png" alt="" v-show="!v.checked" @click="choose(v,true)">
+              <img src="@/static/img/gouxuan.png" alt="" v-show="v.checked" @click="chooseHistory(v,false)">
+              <img src="@/static/img/no-gouxuan.png" alt="" v-show="!v.checked" @click="chooseHistory(v,true)">
             </span>
           </div>
           <div class="t">
-            <i>分类：</i><a>人物</a>
+            <i>分类：</i><a>{{v.catId}}</a>
           </div>
           <div class="t">
-            <i>详情：</i><a>风格写实，神情生动......</a>
+            <i>详情：</i><a>{{v.desc}}</a>
           </div>
           <div class="t">
-            <i>价格：</i><a>¥2500</a>
+            <i>价格：</i><a>¥{{v.price}}</a>
           </div>
         </div>
       </div>
+
+      <!-- 新增数据 -->
+      <div class="list" v-for="v in uploadList" :key="v.image">
+        <div class="img">
+          <img :src="v.image" alt="">
+        </div>
+        <div class="cont">
+          <div class="o">
+            <span class="l"><i>标题：</i><a>{{v.title}}</a></span>
+            <span class="r">
+              <img src="@/static/img/gouxuan.png" alt="" v-show="v.checked" @click="chooseAdd(v,false)">
+              <img src="@/static/img/no-gouxuan.png" alt="" v-show="!v.checked" @click="chooseAdd(v,true)">
+            </span>
+          </div>
+          <div class="t">
+            <i>分类：</i><a>{{v.catId}}</a>
+          </div>
+          <div class="t">
+            <i>详情：</i><a>{{v.desc}}</a>
+          </div>
+          <div class="t">
+            <i>价格：</i><a>¥{{v.price}}</a>
+          </div>
+        </div>
+      </div>
+
+
     </div>  
     <div class="submit-but">
-      <div class="del">
+      <div class="del" @click="removeBatch">
         <img src="@/static/img/del.png" alt="">
         <i>删除</i>
       </div>
@@ -53,19 +81,56 @@ export default {
         { checked: false },{ checked: false },{ checked: false },{ checked: false },
       ],
       isAll: false,
+      work_list: [],
+      uploadList: [],
 
     }
   },
   created(){
-
+    let obj = JSON.parse(this.$route.query.obj);
+    let work_list = [];
+    obj.wList.forEach(v => {
+      work_list.push( Object.assign(v,{ checked: false }));
+    });
+    this.work_list = work_list;
+    let uploadList = [];
+    obj.uList.forEach(v => {
+      uploadList.push( Object.assign(v,{ checked: false }));
+    });
+    this.uploadList = uploadList;
   },
   methods:{
-    choose(v,flag){
+    removeBatch(){
+      let work_list = this.work_list.filter( x => {
+        if(!x.checked){
+          return x;
+        }
+      });
+      let uploadList = this.uploadList.filter( x => {
+        if(!x.checked){
+          return x;
+        }
+      });
+      let obj = {
+        wList: work_list,
+        uList: uploadList
+      }
+      this.$router.push({ path: '/upload', query: {
+        delObj: JSON.stringify(obj)
+      } });
+    },
+    chooseHistory(v,flag){
+      v.checked = flag;
+    },
+    chooseAdd(v,flag){
       v.checked = flag;
     },
     selectAll(){
       this.isAll = !this.isAll;
-      this.list.forEach(v => {
+      this.work_list.forEach(v => {
+        this.$set(v,'checked',this.isAll);
+      });
+      this.uploadList.forEach(v => {
         this.$set(v,'checked',this.isAll);
       });
     },

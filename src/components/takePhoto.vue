@@ -1,30 +1,59 @@
 <template>
   <div class="upload">
-    <van-uploader capture :after-read="takePhoto" />
+    <van-uploader capture :before-read="beforeUpload" :after-read="takePhoto" />
   </div>
 </template>
 <script>
+import Api from "@/api/gallery/index";
 import Exif from 'exif-js'
+import axios from 'axios'
 export default {
-  name: 'takePhoto',
+  name: 'upload',
   data() {
     return {
-      // 图片信息
-      files: {
-        name: "",
-        type: ""
-      }
+      //ossUrl: "http://exhall.dev.yiyiny.com/works/policy",
+      ossUrl: "api/works/policy",
+      ossData: [],
+      uploadList: [],
+
     }
   },
   methods: {
+    beforeUpload(file){
+      return new Promise((resolve) => {
+        if(Array.isArray(file)){//判断是否是数组
+          file.forEach(() => {
+            let params = ['jpg']
+            Api.galleryPolicy(params).then(res => {
+              console.log('oss',res);
+              this.ossData.push(res[1]);
+              resolve()
+            });
+          });
+        }else{
+          let params = ['jpg']
+          Api.galleryPolicy(params).then(res => {
+            console.log('oss',res);
+            this.ossData.push(res[1]);
+            resolve()
+          });
+        }
+      });
+    },
     // 组件方法 获取 流
     takePhoto(file) {
-      this.files.name = file.file.name // 获取文件名
-      this.files.type = file.file.type // 获取类型
-      this.imgPreview(file.file)
+      console.log('上传file',file);
+      console.log('ossData',this.ossData);
+      if(Array.isArray(file)){//判断是否是数组
+        file.forEach((element,index) => {
+          this.imgPreview(element.file,this.ossData[index]);
+        });
+      }else{
+        this.imgPreview(file.file,this.ossData[0]);
+      }
     },
     // 处理图片
-    imgPreview(file) {
+    imgPreview(file,ossData) {
       let self = this
       let Orientation
       //去获取拍照时的信息，解决拍出来的照片旋转问题   npm install exif-js --save   这里需要安装一下包
@@ -46,12 +75,12 @@ export default {
           //判断图片是否大于500K,是就直接上传，反之压缩图片
           if (this.result.length <= 500 * 1024) {
             // 上传图片
-            self.postImg(this.result);
+            self.postImg(this.result,file,ossData);
           } else {
             img.onload = function() {
               let data = self.compress(img, Orientation)
               // 上传图片
-              self.postImg(data);
+              self.postImg(data,file,ossData);
             }
           }
         }
@@ -173,7 +202,7 @@ export default {
       }
     },
     //将base64转换为文件
-    dataURLtoFile(dataurl) {
+    dataURLtoFile(dataurl,files) {
       var arr = dataurl.split(','),
         bstr = atob(arr[1]),
         n = bstr.length,
@@ -181,17 +210,36 @@ export default {
       while (n--) {
         u8arr[n] = bstr.charCodeAt(n)
       }
-      return new File([u8arr], this.files.name, {
-        type: this.files.type
+      return new File([u8arr], files.name, {
+        type: files.type
       })
     },
     // 提交图片到后端
-    postImg(base64) {
-      let file = this.dataURLtoFile(base64)
-      let formData = new window.FormData()
-      formData.append('file', file)
-      // 提交图片
-      // Some code
+    postImg(base64,files,ossData) {
+      let _this = this;
+      let file = this.dataURLtoFile(base64,files)
+      let formData = new FormData();
+      formData.append("OSSAccessKeyId", ossData.OSSAccessKeyId);
+      formData.append("key", ossData.key);
+      formData.append("policy", ossData.policy);
+      formData.append("signature", ossData.signature);
+      formData.append("success_action_status", "200");
+      formData.append("file", file);
+      axios.post(ossData.url,formData).then( res => {
+        console.log('上传oss成功',res);
+        let ossPath = `${res.config["url"]}/${ossData.key}`;
+        console.log('ossPath',ossPath)
+        this.uploadList.push({
+          image: ossPath,
+          title: "图片1",
+          desc: "图片1",
+          sound: "",
+          video: "",
+          price: 111,
+          catId: 0,
+        });
+        _this.$emit('takePhotoData',this.uploadList);
+      });
     }
   }
 }
@@ -220,4 +268,3 @@ export default {
     margin: 0;
   }
 </style>
-

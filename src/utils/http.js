@@ -8,6 +8,7 @@ axios.interceptors.request.use((config) => {
   //   axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
   // }
   config.headers['atoken'] = localStorage.getItem('token');
+  //config.headers['atoken'] = 'UgUldkJgF0o1fw0wGAED';
   return config
 }, (error) => {
   return Promise.reject(error)

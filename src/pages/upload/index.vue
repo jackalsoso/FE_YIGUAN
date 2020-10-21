@@ -18,14 +18,15 @@
         <img
           src="@/static/img/select-hl.png"
           alt=""
-          @click="$router.push('/batchDel')"
+          @click="batchRemove"
         />
       </div>
     </div>
     <div class="list-wrap">
-      <div class="list" v-for="(v,i) in work_list" :key="i">
+      <!-- 原数据 -->
+      <div class="list" v-for="(v,i) in work_list" :key="v.image">
         <div class="img">
-          <img :src="ossImgUrl+v.image" alt="" />
+          <img :src="v.image" alt="" />
         </div>
         <div class="cont">
           <div class="o">
@@ -34,9 +35,10 @@
               <img
                 src="@/static/img/u-edit.png"
                 alt=""
-                @click="$router.push('/productEdit')"
+                v-if="v.mmid === userInfo.id"
+                @click="toEditHistory(v,i)"
               />
-              <img src="@/static/img/u-del.png" alt="" />
+              <img @click="removeHistory(i)" v-if="v.mmid === userInfo.id" src="@/static/img/u-del.png" alt="" />
             </span>
           </div>
           <div class="t"><i>分类：</i><a>{{v.catId}}</a></div>
@@ -44,6 +46,29 @@
           <div class="t"><i>价格：</i><a>¥{{v.price}}</a></div>
         </div>
       </div>
+      <!-- 添加数据 -->
+      <div class="list" v-for="(v,i) in uploadList" :key="v.image">
+        <div class="img">
+          <img :src="v.image" alt="" />
+        </div>
+        <div class="cont">
+          <div class="o">
+            <span class="l"><i>标题：</i><a>{{v.title}}</a></span>
+            <span class="r">
+              <img
+                src="@/static/img/u-edit.png"
+                alt=""
+                @click="toEditAdd(v,i)"
+              />
+              <img @click="removeAdd(i)" src="@/static/img/u-del.png" alt="" />
+            </span>
+          </div>
+          <div class="t"><i>分类：</i><a>{{v.catId}}</a></div>
+          <div class="t"><i>详情：</i><a>{{v.desc}}</a></div>
+          <div class="t"><i>价格：</i><a>¥{{v.price}}</a></div>
+        </div>
+      </div>
+
     </div>
     <div class="submit-but">
       <span @click="addImg">
@@ -65,7 +90,7 @@
       <div class="bottom">
         <div class="options">
           <span>现场拍照
-            <!-- <van-uploader capture :after-read="takePhoto" /> -->
+            <take-photo @takePhotoData="takePhotoData" />
           </span>
           <span>相册选择
             <upload-img @uploadData="uploadData" />
@@ -117,19 +142,21 @@
       <div class="progress" @click="$router.push('/showGallery')">
         <img src="@/static/img/jindu-logo.png" alt="" />
         <div class="hint">作品上传中...</div>
-        <van-progress :percentage="nuw" :show-pivot="true" color="#F2630D" />
+        <van-progress :percentage="scaleNum" :show-pivot="true" color="#F2630D" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Gallery from '@/api/gallery/index';
+import Api from '@/api/gallery/index';
 import uploadImg from '@/components/uploadImg';
+import takePhoto from '@/components/takePhoto';
 export default {
   name: "upload",
   components: {
     uploadImg,
+    takePhoto,
   },
   data() {
     return {
@@ -145,9 +172,12 @@ export default {
         { id: 3, size: "146×97" },
         { id: 4, size: "162×130" },
       ],
-      nuw:0,
+      galleryInfo: {},
+      userInfo: {},
+      scaleNum: 0,
       ossImgUrl: '',
       work_list: [],
+      uploadList: [],
     };
   },
   created() {
@@ -155,12 +185,79 @@ export default {
     this.init();
   },
   methods: {
-    uploadData(data){
-      console.log('oss-data',data);
+    batchRemove(){
+      let obj = {
+        wList: this.work_list,
+        uList: this.uploadList
+      }
+      this.$router.push({
+        path: '/batchDel', query: {
+          obj: JSON.stringify(obj)
+        }
+      })
+    },
+    removeHistory(i){
+      this.work_list.splice(i,1);
+    },
+    removeAdd(i){
+      this.uploadList.splice(i,1);
+    },
+    toEditHistory(v,i){
+      let obj = {
+        type: 'history',
+        key: i,
+        [i]: v
+      }
+      this.$router.push({ path: '/productEdit', query: {
+        obj: JSON.stringify(obj)
+      } });
+    },
+    toEditAdd(v,i){
+      let obj = {
+        type: 'add',
+        key: i,
+        [i]: v
+      }
+      this.$router.push({ path: '/productEdit', query: {
+        obj: JSON.stringify(obj)
+      } });
+    },
+    uploadData(list){
+      console.log('oss-data',list);
+      this.isShowAdd = false;
+      this.uploadList = list;
+    },
+    takePhotoData(list){
+      this.isShowAdd = false;
+      this.uploadList = list;
     },
     init(){
-      Gallery.galleryDetail([1]).then( res => {
-        this.work_list = res[1].picturies;
+      Api.galleryDetail([1]).then( res => {
+        this.galleryInfo = res[1];
+        let list = [];
+        res[1].picturies.forEach( v => {
+          list.push(Object.assign(v,{
+            mmid: res[1].mmId
+          }));
+        });
+        this.work_list = list;
+        this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        if( typeof this.$route.query.obj !== 'undefined'){
+          let obj = JSON.parse(this.$route.query.obj);
+          console.log('编辑obj',obj);
+          if(obj.type === 'history'){
+            this.work_list.splice(obj.key,1,obj[obj.key]);
+          }else if(obj.type === 'add'){
+            this.uploadList.splice(obj.key,1,obj[obj.key]);
+            console.log('编辑完成list',this.uploadList);
+          }
+        }
+        if( typeof this.$route.query.delObj !== 'undefined'){
+          let obj = JSON.parse(this.$route.query.delObj);
+          console.log('编辑obj',obj);
+          this.work_list = obj.wList;
+          this.uploadList = obj.uList;
+        }
       });
     },
     // 打开添加弹窗
@@ -193,28 +290,46 @@ export default {
     },
     uploadok() {
       this.isShowProgress = true;
-      this.click();
-      // setTimeout(() => {
-      //   this.isShowProgress = false;
-      // }, 2000);
+      console.log('userid',this.userInfo);
+      let work_list = this.work_list.filter(item => {
+        if(item.mmid === this.userInfo.id){
+          return item;
+        }
+      })
+      console.log('workList',work_list);
+      let picturies = [...work_list,...this.uploadList];
+      let params = {
+        // id: this.galleryInfo.id,
+        mmId: this.userInfo.id,
+        name: this.galleryInfo.name,
+        image: this.galleryInfo.image,
+        gallery: this.galleryInfo.id,
+        picturies: picturies,
+        reviewed: true
+      }
+      Api.galleryAddOrEdit([params]).then( res => {
+        console.log('确认提交成功',res);
+        this.progress_start();
+      });
     },
-    click() {
+    progress_start() {
       //定义定时器开始时间为0
       var progressnuw = 0; //顶一个定时器
-
       var timer = setInterval(() => {
         //变量一直++
-
         progressnuw++; //清楚定时器
-
         if (progressnuw >= 100) {
           clearInterval(timer);
-          // this.$router.push('/showGallery')
+          this.isShowProgress = false;
+          this.$toast.success('上传成功');
+          setTimeout(() => {
+            //this.$router.push('/showGallery')
+          },1500);
         } //获取重新赋值
-
-        this.nuw = progressnuw;
-      }, 30);
+        this.scaleNum = progressnuw;
+      }, 20);
     },
+
   },
 };
 </script>

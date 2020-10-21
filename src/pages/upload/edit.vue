@@ -11,58 +11,58 @@
 
     <div class="edit">
       <div class="img"> 
-        <img src="@/static/img/item-1.jpeg" alt="">
+        <img :src="obj[obj.key].image" alt="">
       </div>
       <div class="options-wrap">
         <div class="options">
           <label class="tit">标题</label>
           <div class="make">
-            <input type="text" placeholder="请输入标题">
+            <input v-model="obj[obj.key].title" type="text" placeholder="请输入标题">
           </div>
         </div>
         <div class="options">
           <label class="tit">分类</label>
           <div class="make" @click="showPicker = true">
-            <span>油画</span>
+            <span>{{ typeName }}</span>
             <img class="img1" src="@/static/img/pull-d.png" alt="">
           </div>
         </div>
         <div class="options">
           <label class="tit">作品详情</label>
           <div class="make">
-            <input type="text" placeholder="请输入详情">
+            <input type="text" v-model="obj[obj.key].desc" placeholder="请输入详情">
           </div>
         </div>
         <div class="options">
           <label class="tit">上传语音</label>
           <div class="make">
-            <van-uploader class="upload-file" :after-read="afterRead" />
+            <upload-voice @uploadVoice="uploadVoice" />
             <img class="img2" src="@/static/img/up-h.png" alt="">
-            <i>(支持格式：wma、aac、mp3、wav)</i>
+            <i>{{ fileVoice? fileVoice : '(支持格式：wma、aac、mp3、wav)' }}</i>
           </div>
         </div>
         <div class="options">
           <label class="tit">上传视频</label>
           <div class="make">
-            <van-uploader class="upload-file" :after-read="afterRead" />
+            <upload-video @uploadVideo="uploadVideo" />
             <img class="img2" src="@/static/img/up-h.png" alt="">
-            <i>(支持格式：wma、aac、mp3、wav)</i>
+            <i>{{ fileVideo? fileVideo : '(支持格式：mp4)' }}</i>
           </div>
         </div>
         <div class="options">
           <label class="tit">输入价格</label>
           <div class="make">
-            <input type="text" placeholder="请输入价格">
+            <input type="text" v-model="obj[obj.key].price" placeholder="请输入价格">
           </div>
         </div>
       </div>
     </div>
 
     <div class="submit-but">
-      <span @click="$router.push('/upload')">
+      <span @click="confirmEdit">
         <i>确认</i>
       </span>
-      <span @click="$router.push('/upload')">
+      <span @click="cancel">
         <i>取消</i>
       </span>
     </div>
@@ -83,26 +83,72 @@
 </template>
 
 <script>
+import Api from "@/api/gallery/index";
+import uploadVoice from '@/components/uploadVoice';
+import uploadVideo from '@/components/uploadVideo';
 export default {
   name: 'productEdit',
+  components:{
+    uploadVoice,
+    uploadVideo
+  },
   data(){
     return{
       value: '',
       showPicker: false,
-      columns: ['油画', '山水画', '风景画','油画', '山水画', '风景画'],
+      columns: [],
+      typeName: '',
+      obj: {},
+      fileVoice: '',
+      fileVideo: '',
+
     }
   },
   created(){
-
+    this.init();
   },
   methods:{
+    init(){
+      this.obj = JSON.parse(this.$route.query.obj);
+      console.log('obj',this.obj);
+      Api.galleryClassify().then(res => {
+        this.columns = res[1].map(v => {
+          return {
+            id: v.id,
+            text: v.name
+          }
+        });
+        // let index = this.columns.findIndex( x => x.id === this.obj.catId);
+        this.typeName = this.columns[0].text;
+      });
+    },
     onConfirm(value) {
-      this.value = value;
+      console.log('选择的值',value);
+      this.obj[this.obj.key].catId = value.id;
+      this.typeName = value.text;
       this.showPicker = false;
     },
-    afterRead(file) {
-      // 此时可以自行将文件上传至服务器
-      console.log(file);
+    uploadVoice(url) {
+      console.log('语音',url);
+      this.obj[this.obj.key].sound = url;
+      this.fileVoice = 'file.mp3';
+    },
+    uploadVideo(url) {
+      console.log('视频',url);
+      this.obj[this.obj.key].video = url;
+      this.fileVideo = 'file.mp4';
+    },
+    cancel(){
+      this.$toast('取消编辑');
+      setTimeout(() => {
+        this.$router.push('/upload');
+      },1000);
+    },
+    confirmEdit(){
+      let obj = JSON.stringify(this.obj);
+      this.$router.push({ path: '/upload', query: {
+        obj: obj
+      } });
     },
 
   }
