@@ -232,7 +232,7 @@ export default {
       this.uploadList = list;
     },
     init(){
-      Api.galleryDetail([1]).then( res => {
+      Api.galleryDetailByMe([{},0,20]).then( res => {
         this.galleryInfo = res[1];
         let list = [];
         res[1].picturies.forEach( v => {

@@ -10,14 +10,19 @@ export default {
   galleryList(params) {
     return http.post(`${BASEURL}/visit/galleries`,params);
   },
-  // 画廊详情
+  // 画廊内画展
   galleryDetail(params) {
     return http.post(`${BASEURL}/visit/hang`,params);
+  },
+  //个人画展
+  galleryDetailByMe(params) {
+    return http.post(`${BASEURL}/works/hangs`,params);
   },
   //画展增幅
   galleryAddOrEdit(params) {
     return http.post(`${BASEURL}/works/hang`,params);
   },
+
   //oss
   galleryPolicy(params) {
     return http.post(`${BASEURL}/works/policy`,params);
