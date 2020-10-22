@@ -325,7 +325,7 @@ export default {
           this.isShowProgress = false;
           this.$toast.success('上传成功');
           setTimeout(() => {
-            //this.$router.push('/showGallery');
+            this.$router.push('/showGallery');
           },1500);
         } //获取重新赋值
         this.scaleNum = progressnuw;
