@@ -10,7 +10,7 @@
     <div class="top-bg"></div>
     <div class="list-wrap">
       <!-- 原始数据 -->
-      <div class="list" v-for="v in work_list" :key="v.image">
+      <div class="list" v-for="(v,i) in work_list" :key="i">
         <div class="img">
           <img :src="v.image" alt="">
         </div>
@@ -35,7 +35,7 @@
       </div>
 
       <!-- 新增数据 -->
-      <div class="list" v-for="v in uploadList" :key="v.image">
+      <div class="list" v-for="(v,i) in uploadList" :key="`${work_list.length+i}`">
         <div class="img">
           <img :src="v.image" alt="">
         </div>

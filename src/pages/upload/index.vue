@@ -24,7 +24,7 @@
     </div>
     <div class="list-wrap">
       <!-- 原数据 -->
-      <div class="list" v-for="(v,i) in work_list" :key="v.image">
+      <div class="list" v-for="(v,i) in work_list" :key="i">
         <div class="img">
           <img :src="v.image" alt="" />
         </div>
@@ -35,10 +35,9 @@
               <img
                 src="@/static/img/u-edit.png"
                 alt=""
-                v-if="v.mmid === userInfo.id"
                 @click="toEditHistory(v,i)"
               />
-              <img @click="removeHistory(i)" v-if="v.mmid === userInfo.id" src="@/static/img/u-del.png" alt="" />
+              <img @click="removeHistory(i)" src="@/static/img/u-del.png" alt="" />
             </span>
           </div>
           <div class="t"><i>分类：</i><a>{{v.catId}}</a></div>
@@ -47,7 +46,7 @@
         </div>
       </div>
       <!-- 添加数据 -->
-      <div class="list" v-for="(v,i) in uploadList" :key="v.image">
+      <div class="list" v-for="(v,i) in uploadList" :key="`${work_list.length}+${i}`">
         <div class="img">
           <img :src="v.image" alt="" />
         </div>
@@ -152,6 +151,7 @@
 import Api from '@/api/gallery/index';
 import uploadImg from '@/components/uploadImg';
 import takePhoto from '@/components/takePhoto';
+import merge from 'webpack-merge';
 export default {
   name: "upload",
   components: {
@@ -232,15 +232,15 @@ export default {
       this.uploadList = list;
     },
     init(){
-      Api.galleryDetail([1]).then( res => {
-        this.galleryInfo = res[1];
-        let list = [];
-        res[1].picturies.forEach( v => {
-          list.push(Object.assign(v,{
-            mmid: res[1].mmId
-          }));
-        });
-        this.work_list = list;
+      Api.galleryDetailByMe([{},0,20]).then( res => {
+        this.galleryInfo = res[1][0];
+        //let list = [];
+        // res[1].picturies.forEach( v => {
+        //   list.push(Object.assign(v,{
+        //     mmid: res[1].mmId
+        //   }));
+        // });
+        this.work_list = res[1][0].picturies;
         this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
         if( typeof this.$route.query.obj !== 'undefined'){
           let obj = JSON.parse(this.$route.query.obj);
@@ -291,24 +291,26 @@ export default {
     uploadok() {
       this.isShowProgress = true;
       console.log('userid',this.userInfo);
-      let work_list = this.work_list.filter(item => {
-        if(item.mmid === this.userInfo.id){
-          return item;
-        }
-      })
-      console.log('workList',work_list);
-      let picturies = [...work_list,...this.uploadList];
+      // let work_list = this.work_list.filter(item => {
+      //   if(item.mmid === this.userInfo.id){
+      //     return item;
+      //   }
+      // })
+      let picturies = [...this.work_list,...this.uploadList];
       let params = {
-        id: '',
-        mmId: this.userInfo.id,
+        id: this.galleryInfo.id,
+        mmId: this.userInfo.mmId,
         name: this.galleryInfo.name,
         image: this.galleryInfo.image,
-        gallery: this.galleryInfo.id,
+        gallery: this.galleryInfo.gallery,
         picturies: picturies,
         reviewed: true
       }
       Api.galleryAddOrEdit([params]).then( res => {
         console.log('确认提交成功',res);
+        this.$router.push({
+          query: merge({},{})
+        })
         this.progress_start();
       });
     },

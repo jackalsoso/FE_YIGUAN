@@ -1,4 +1,4 @@
-let BASEURL= ""; 
+let BASEURL= "";
 
 // switch (process.env.NODE_ENV) {
 //     case 'development':
