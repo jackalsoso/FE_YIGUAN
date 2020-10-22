@@ -254,7 +254,7 @@ export default {
         }
         if( typeof this.$route.query.delObj !== 'undefined'){
           let obj = JSON.parse(this.$route.query.delObj);
-          console.log('编辑obj',obj);
+          console.log('删除obj',obj);
           this.work_list = obj.wList;
           this.uploadList = obj.uList;
         }
@@ -299,7 +299,7 @@ export default {
       console.log('workList',work_list);
       let picturies = [...work_list,...this.uploadList];
       let params = {
-        // id: this.galleryInfo.id,
+        id: '',
         mmId: this.userInfo.id,
         name: this.galleryInfo.name,
         image: this.galleryInfo.image,
@@ -323,7 +323,7 @@ export default {
           this.isShowProgress = false;
           this.$toast.success('上传成功');
           setTimeout(() => {
-            //this.$router.push('/showGallery')
+            //this.$router.push('/showGallery');
           },1500);
         } //获取重新赋值
         this.scaleNum = progressnuw;
