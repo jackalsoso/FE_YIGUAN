@@ -92,7 +92,7 @@
             <take-photo @takePhotoData="takePhotoData" />
           </span>
           <span>相册选择
-            <upload-img v-model="uploadList" @uploadData="uploadData" />
+            <upload-img v-model="uploadList" :addIndex="add_index" @uploadData="uploadData" />
           </span>
           <span>......</span>
         </div>
@@ -178,6 +178,7 @@ export default {
       ossImgUrl: '',
       work_list: [],
       uploadList: [],
+      add_index: 0,
     };
   },
   created() {
@@ -222,7 +223,8 @@ export default {
         obj: JSON.stringify(obj)
       } });
     },
-    uploadData(){
+    uploadData(i){
+      this.add_index = i;
       this.isShowAdd = false;
     },
     takePhotoData(list){

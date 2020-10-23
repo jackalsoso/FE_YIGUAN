@@ -19,6 +19,10 @@ export default {
       default(){
         return []
       }
+    },
+    addIndex: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -26,7 +30,6 @@ export default {
       //ossUrl: "http://exhall.dev.yiyiny.com/works/policy",
       ossUrl: "api/works/policy",
       ossData: [],
-
     }
   },
   methods: {
@@ -240,18 +243,18 @@ export default {
         console.log('上传oss成功',res);
         let ossPath = `${res.config["url"]}/${ossData.key}`;
         console.log('ossPath',ossPath)
-        let i = this.uploadList.length + 1;
+        let i = this.addIndex + 1;
         this.uploadList.push({
           image: ossPath,
-          title: `图片${i}${i}${i}`,
+          title: `作品${i}`,
           desc: "",
           sound: "",
           video: "",
-          price: `${i}${i}${i}`,
-          catId: 0,
+          price: 999,
+          catId: '',
         });
         console.log('更新uploadList数据',this.uploadList);
-        _this.$emit('uploadData');
+        _this.$emit('uploadData',i);
       });
     }
   }
