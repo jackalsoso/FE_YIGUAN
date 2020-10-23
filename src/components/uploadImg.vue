@@ -240,13 +240,14 @@ export default {
         console.log('上传oss成功',res);
         let ossPath = `${res.config["url"]}/${ossData.key}`;
         console.log('ossPath',ossPath)
+        let i = this.uploadList.length + 1;
         this.uploadList.push({
           image: ossPath,
-          title: "图片1",
-          desc: "图片1",
+          title: `图片${i}${i}${i}`,
+          desc: "",
           sound: "",
           video: "",
-          price: 111,
+          price: `${i}${i}${i}`,
           catId: 0,
         });
         console.log('更新uploadList数据',this.uploadList);
