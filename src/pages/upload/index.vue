@@ -92,7 +92,7 @@
             <take-photo @takePhotoData="takePhotoData" />
           </span>
           <span>相册选择
-            <upload-img @uploadData="uploadData" />
+            <upload-img v-model="uploadList" @uploadData="uploadData" />
           </span>
           <span>......</span>
         </div>
@@ -222,10 +222,8 @@ export default {
         obj: JSON.stringify(obj)
       } });
     },
-    uploadData(list){
-      console.log('oss-data',list);
+    uploadData(){
       this.isShowAdd = false;
-      this.uploadList = list;
     },
     takePhotoData(list){
       this.isShowAdd = false;

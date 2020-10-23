@@ -9,12 +9,23 @@ import Exif from 'exif-js'
 import axios from 'axios'
 export default {
   name: 'upload',
+  model: {
+    prop: 'uploadList',
+    event: 'update'
+  },
+  props: {
+    uploadList: {
+      type: Array,
+      default(){
+        return []
+      }
+    }
+  },
   data() {
     return {
       //ossUrl: "http://exhall.dev.yiyiny.com/works/policy",
       ossUrl: "api/works/policy",
       ossData: [],
-      uploadList: [],
 
     }
   },
@@ -238,7 +249,8 @@ export default {
           price: 111,
           catId: 0,
         });
-        _this.$emit('uploadData',this.uploadList);
+        console.log('更新uploadList数据',this.uploadList);
+        _this.$emit('uploadData');
       });
     }
   }
