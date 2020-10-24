@@ -1,12 +1,64 @@
 <template>
   <div class="content">
+    <div style="position: absolute;left:0;top:100px;">
+    <button
+      @click="bz1"
+      style="width: 60px;height:20px;position: absolute;font-size:10px"
+    >
+      加载画廊
+    </button>
+    <button
+      @click="bz2('2')"
+      style="width: 60px;height:20px;position: absolute;top:20px;font-size:10px"
+    >
+      改壁纸2
+    </button>
+    <button
+      @click="bz2('4')"
+      style="width: 60px;height:20px;position: absolute;top:20px;left:60px;font-size:10px"
+    >
+      改壁纸5
+    </button>
+    <button
+      @click="bz3()"
+      style="width: 70px;height:20px;position: absolute;top:40px;font-size:10px"
+    >
+      添加5个画
+    </button>
+    <button
+      @click="bz4()"
+      style="width: 70px;height:20px;position: absolute;top:40px;left:70px;font-size:10px"
+    >
+      删除所有画
+    </button>
+    <button
+      @click="bz6()"
+      style="width: 70px;height:20px;position: absolute;top:40px;left:140px;font-size:10px"
+    >
+      添加6个画
+    </button>
+    <button
+      @click="bz5('0')"
+      v-if="angle == '1'"
+      style="width: 60px;height:20px;position: absolute;top:60px;font-size:10px"
+    >
+      切换普通
+    </button>
+    <button
+      v-if="angle == '0'"
+      @click="bz5('1')"
+      style="width: 60px;height:20px;position: absolute;top:60px;font-size:10px"
+    >
+      切换鹰眼
+    </button>
+  </div>
     <div class="search-warp">
       <div class="search">
         <img
           class="back"
           src="@/static/img/back-icon2.png"
           alt=""
-          @click="$router.back(-1)"
+          @click="$router.push('/gallery')"
         />
         <img
           class="qiu"
@@ -22,9 +74,19 @@
           v-show="isThree"
           @click="change3D"
         />
-        <span class="upload" @click="$router.push('/upload')">上传画作</span>
+        <span class="upload" @click="$router.push('/upload')">上传1画作</span>
       </div>
     </div>
+    <webgl
+      ref="insert"
+      :parent_Gallerynum="Gallerynum"
+      :parent_addwallpaper="wallpaper"
+      :parent_addpic="picarr"
+      :parent_angle="angle"
+      @childData="childData"
+      @childstate="childstate"
+      @gellarstate="gellarstate"
+    ></webgl>
     <!-- <webgl
       style="width: 100%; height: 100%; position: absolute;top:0; z-index: 1000;"
       ref="webgl"
@@ -60,7 +122,7 @@
   </div>
 </template>
 <script>
-//import webgl from "../webgl/index";
+import webgl from "@/components/galleryModel.vue";
 export default {
   name: "galleryDetail",
   components: {
@@ -91,6 +153,7 @@ export default {
 
 <style lang="scss" scoped>
 .content {
+  background: #000;
   .search-warp {
     background: none;
 

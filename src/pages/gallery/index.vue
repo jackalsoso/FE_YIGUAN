@@ -3,7 +3,7 @@
     <div class="animated fadeInUp">
       <div class="search-warp">
         <div class="search">
-          <img class="back" src="@/static/img/back-icon.png" alt="" @click="$router.back(-1)" >
+          <img class="back" src="@/static/img/back-icon.png" alt="" @click="$router.push('/')" >
           <div class="input" @click="$router.push('/search')">
             <img src="@/static/img/search.png" alt="">
             <input type="text" placeholder="搜索热门画廊模板" readonly >

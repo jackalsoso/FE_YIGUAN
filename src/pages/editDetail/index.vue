@@ -9,7 +9,7 @@
     <div class="edit-button">
       <span @click="showPicker = true">编辑详情</span>
       <span @click="isSet = !isSet">
-        设置顺序 
+        设置顺序
         <img :class="isSet? 'on' : '' " src="@/static/img/pull-d.png" alt="">
         <div class="select" v-if="isSet">
           <i>1</i>
@@ -88,7 +88,7 @@ export default {
 
   },
   methods:{
-    
+
   }
 }
 </script>
