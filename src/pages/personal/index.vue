@@ -112,12 +112,12 @@
       </div>
     </div>
     <div class="focus-but">
-      <span @click="$router.push('/focusInfor')">
-        <img src="@/static/img/focus-i.png" alt="">
+      <span @click="$router.push('/focusPersonal')">
+        <img src="@/static/img/focus-i.png">
         <i>关注</i>
       </span>
-      <span>
-        <img src="@/static/img/my-i.png" alt="" @click="$router.push('/')">
+      <span @click="$router.push('/personal')">
+        <img src="@/static/img/my-ih.png">
         <i>我的</i>
       </span>
     </div>
@@ -378,7 +378,7 @@ export default {
 .list_content {
   height: 80%;
   padding: 16px 16px 30px;
-  border-bottom: 1px solid #DEDEDE; 
+  border-bottom: 1px solid #DEDEDE;
 }
 /* 弹出框按钮 */
 .sheet_btn {
@@ -858,24 +858,24 @@ ul li {
           font-size: 10px;
         }
         &:first-child{
-          background-color: #F2630D;
           img{
             width: 19px;
             height: 16px;
             margin-bottom: 2px;
           }
           i{
-            color: #fff;
+            color: #000;
           }
         }
         &:last-child{
+          background-color: #F2630D;
           img{
             width: 15px;
             height: 16px;
             margin-bottom: 2px;
           }
           i{
-            color: #000;
+            color: #fff;
           }
         }
       }
