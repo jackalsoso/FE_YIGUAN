@@ -24,12 +24,12 @@
     </div>
 
     <div class="focus-but">
-      <span @click="$router.push('/focusInfor')">
-        <img src="@/static/img/focus-i.png" alt="">
+      <span @click="$router.push('/focusPersonal')">
+        <img src="@/static/img/focus-ih.png">
         <i>关注</i>
       </span>
-      <span>
-        <img src="@/static/img/my-i.png" alt="" @click="$router.push('/')">
+      <span @click="$router.push('/personal')">
+        <img src="@/static/img/my-i.png">
         <i>我的</i>
       </span>
     </div>
@@ -45,7 +45,7 @@ export default {
     }
   },
   created(){
-    
+
   },
   methods:{
 

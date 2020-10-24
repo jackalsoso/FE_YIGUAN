@@ -18,5 +18,5 @@ if (window.location.origin.indexOf("localhost:8088") != -1) {
 } else {
   console.error("当前origin：",window.location.origin);
 }
-
+// BASEURL = "/api";
 export default BASEURL;
