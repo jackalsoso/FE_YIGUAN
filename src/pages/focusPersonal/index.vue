@@ -9,7 +9,7 @@
       </div>
     </div>
 
-    <div class="author" v-for="v in 3" :key="v">
+    <div class="author" v-for="(v,i) in authorList" :key="i">
       <div class="name" @click="$router.push('/focusInfor')">
         <label>作者昵称</label>
         <span>
@@ -19,7 +19,8 @@
       </div>
       <span class="intro">贫穷的纠缠，坚强的意识...</span>
       <div class="box-img">
-        <img @click="$router.push('/focusWorks')" class="animated fadeInLeft" src="@/static/img/item-1.jpeg" alt="" v-for="v in 3" :key="v">
+        <img @click="$router.push('/focusWorks')" class="animated fadeInLeft" :src="ossUrl+v2.image" alt="" v-for="(v2,i2) in v.picturies" :key="i2">
+        <img @click="$router.push('/focusWorks')" class="animated fadeInLeft" src="@/static/img/headImg.jpeg" alt="">
       </div>
     </div>
 
@@ -37,17 +38,27 @@
 </template>
 
 <script>
+import Api from '@/api/gallery/index';
 export default {
   name: 'focusPersonal',
   data(){
     return{
-
+      authorList: [],
+      ossUrl: '',
     }
   },
   created(){
-
+    this.ossUrl = window['ossImgUrl'];
+    this.init();
   },
   methods:{
+    //列表
+    init(){
+      Api.galleryDetail([1]).then( res => {
+        console.log('data',res);
+        this.authorList.push(res[1]);
+      });
+    },
 
   }
 }
@@ -55,6 +66,8 @@ export default {
 
 <style lang="scss" scoped>
   .content{
+    height: 100%;
+    box-sizing: border-box;
     padding-bottom: 70px;
     background-color: #F5F5F5;
     .ml{
@@ -95,7 +108,6 @@ export default {
       .box-img{
         display: flex;
         align-items: center;
-        justify-content: space-between;
         img{
           width:119px;
           height:193px;
@@ -104,10 +116,12 @@ export default {
           &:first-child{
             -webkit-animation-delay: 1s;//延迟
             animation-delay: 1s;
+            margin-right: 10px;
           }
           &:nth-child(2){
             -webkit-animation-delay: .5s;//延迟
             animation-delay: .5s;
+            margin-right: 10px;
           }
         }
       }
