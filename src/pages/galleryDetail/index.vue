@@ -1,57 +1,5 @@
 <template>
   <div class="content">
-    <div style="position: absolute;left:0;top:100px;">
-    <button
-      @click="bz1"
-      style="width: 60px;height:20px;position: absolute;font-size:10px"
-    >
-      加载画廊
-    </button>
-    <button
-      @click="bz2('2')"
-      style="width: 60px;height:20px;position: absolute;top:20px;font-size:10px"
-    >
-      改壁纸2
-    </button>
-    <button
-      @click="bz2('4')"
-      style="width: 60px;height:20px;position: absolute;top:20px;left:60px;font-size:10px"
-    >
-      改壁纸5
-    </button>
-    <button
-      @click="bz3()"
-      style="width: 70px;height:20px;position: absolute;top:40px;font-size:10px"
-    >
-      添加5个画
-    </button>
-    <button
-      @click="bz4()"
-      style="width: 70px;height:20px;position: absolute;top:40px;left:70px;font-size:10px"
-    >
-      删除所有画
-    </button>
-    <button
-      @click="bz6()"
-      style="width: 70px;height:20px;position: absolute;top:40px;left:140px;font-size:10px"
-    >
-      添加6个画
-    </button>
-    <button
-      @click="bz5('0')"
-      v-if="angle == '1'"
-      style="width: 60px;height:20px;position: absolute;top:60px;font-size:10px"
-    >
-      切换普通
-    </button>
-    <button
-      v-if="angle == '0'"
-      @click="bz5('1')"
-      style="width: 60px;height:20px;position: absolute;top:60px;font-size:10px"
-    >
-      切换鹰眼
-    </button>
-  </div>
     <div class="search-warp">
       <div class="search">
         <img
@@ -60,37 +8,23 @@
           alt=""
           @click="$router.push('/gallery')"
         />
-        <img
-          class="qiu"
-          src="@/static/img/3D.png"
-          alt=""
-          v-show="!isThree"
-          @click="change3D"
-        />
-        <img
-          class="qiu"
-          src="@/static/img/2D.png"
-          alt=""
-          v-show="isThree"
-          @click="change3D"
-        />
-        <span class="upload" @click="$router.push('/upload')">上传1画作</span>
+        <img v-if="angle == '0'" class="qiu" src="@/static/img/3D.png" @click="angle='1'" />
+        <img v-if="angle == '1'" class="qiu" src="@/static/img/2D.png" @click="angle='0'" />
+        <span class="upload" @click="$router.push('/upload')">上传画作</span>
       </div>
     </div>
-    <webgl
-      ref="insert"
-      :parent_Gallerynum="Gallerynum"
-      :parent_addwallpaper="wallpaper"
-      :parent_addpic="picarr"
-      :parent_angle="angle"
-      @childData="childData"
-      @childstate="childstate"
-      @gellarstate="gellarstate"
-    ></webgl>
-    <!-- <webgl
-      style="width: 100%; height: 100%; position: absolute;top:0; z-index: 1000;"
-      ref="webgl"
-    ></webgl> -->
+    <div class="model">
+      <galleryModel
+        ref="insert"
+        :parent_Gallerynum="Gallerynum"
+        :parent_addwallpaper="wallpaper"
+        :parent_addpic="picarr"
+        :parent_angle="angle"
+        @childData="childData"
+        @childstate="childstate"
+        @gellarstate="gellarstate"
+      ></galleryModel>
+    </div>
     <div class="popup-bottom animated fadeInUp">
       <div class="pop-type">
         <div class="tit" @click="(isShowHk = !isShowHk), (isShowBz = false)">
@@ -109,12 +43,8 @@
       <div class="pop-bz">
         <div class="tit" @click="isShowBz = true">壁纸</div>
         <div class="backdrop" v-if="isShowBz">
-          <span v-for="(v, i) in 4" :key="v" @click="choose(i)">
-            <img
-              src="@/static/img/gouxuan.png"
-              alt=""
-              v-show="checkIndex == i"
-            />
+          <span v-for="(item, index) in wallpapers" :style="{'background-color':item.color}" :key="index" @click="changeBG(item)">
+            <img src="@/static/img/gouxuan.png" alt="" v-show="wallpaper == item.key" />
           </span>
         </div>
       </div>
@@ -122,31 +52,120 @@
   </div>
 </template>
 <script>
-import webgl from "@/components/galleryModel.vue";
+import galleryModel from "@/components/galleryModel.vue";
 export default {
   name: "galleryDetail",
   components: {
-    //webgl,
+    galleryModel
   },
   data() {
     return {
       radio: "1",
-      checkIndex: -1,
       isShowHk: false,
       isShowBz: false,
       gouH: 0,
       isThree: false,
+      wallpapers:[
+        {
+          color:'#D4D1CC',
+          key:'wall1_1'
+        },
+        {
+          color:'#BAB1A8',
+          key:'wall1_2'
+        },
+        {
+          color:'#BCC1BB',
+          key:'wall1_3'
+        },
+        {
+          color:'#BABEC1',
+          key:'wall1_4'
+        },
+        {
+          color:'#b63132',
+          key:'wall1_5'
+        },
+      ],
+      Gallerynum: "", //画廊风格
+      wallpaper: "wall1_1", //壁纸类型'wall1_1'，'wall1_2'，'wall1_3'，'wall1_4'，'wall1_5'
+      picarr: [],
+      angle: "0",
     };
   },
   created() {},
+  mounted(){
+    this.Gallerynum = 'gallery_1'
+    this.pickarr = [
+      //画作数组   项目地址用本机ip+端口号，图片路径替换成本机ip+端口号
+      {
+        id: "1",
+        url: "https://t7.baidu.com/it/u=3616242789,1098670747&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=1ec3f94cf7d41059ec8657d22876a34e",
+        type: "0",
+        index: "001",
+        backcolor: 0x000000,
+        sdata:[//sdata是soso那边的数据
+            {aa:1}
+        ]
+      },
+      {
+        id: "2",
+        url: "https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=9a6b7cc24c24500fcf0547f9467bb88e",
+        type: "0",
+        index: "002",
+        backcolor: 0x000000,
+        sdata:[
+            {aa:1}
+        ]
+      },
+      {
+        id: "3",
+        url: "https://t9.baidu.com/it/u=583874135,70653437&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=ca63e5a3570a5e513b7615ee2c86e403",
+        type: "0",
+        index: "003",
+        backcolor: 0x000000,
+        sdata:[
+            {aa:1}
+        ]
+      },
+      {
+        id: "4",
+        url: "https://t9.baidu.com/it/u=1307125826,3433407105&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=4f2853904eac581fcefa6d8ea207b3b3",
+        type: "0",
+        index: "004",
+        backcolor: 0x000000,
+        sdata:[
+            {aa:1}
+        ]
+      },
+      {
+        id: "5",
+        url: "https://t9.baidu.com/it/u=2268908537,2815455140&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=4986454806dfc9e69edaa64965040789",
+        type: "0",
+        index: "023",
+        backcolor: 0x000000,
+        sdata:[
+            {aa:1}
+        ]
+      },
+    ]
+  },
   methods: {
-    choose(i) {
-      this.checkIndex = i;
+    changeBG(item){
+      this.wallpaper = item.key
     },
-    change3D(){
-      this.isThree = !this.isThree
-      this.$refs.webgl.switch_camera()
-    }
+    childstate(item) {
+      console.log(item);
+    },
+    //   画廊准备完成的返回信息
+    gellarstate(item) {
+      console.log(item);
+    },
+    //点击画作返回信息
+    childData(item) {
+      console.log("点击的画作信息:")
+      console.log(item);
+    },
   },
 };
 </script>
@@ -154,9 +173,15 @@ export default {
 <style lang="scss" scoped>
 .content {
   background: #000;
+  .model{
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+  }
   .search-warp {
-    background: none;
-
+    position: absolute;
+    left: 0;
+    top:0;
     z-index: 2000;
     .search {
       background: none;
@@ -252,16 +277,19 @@ export default {
         margin-bottom: 12px;
       }
       .backdrop {
+        width: calc(100% - 56px);
+        margin: 0 auto;
+        overflow: hidden;
         display: flex;
-        flex-wrap: wrap;
-        padding-left: 28px;
+        justify-content: space-between;
+        padding:0;
         span {
           // background: #ffdbe3;
-          width: 65px;
+          width: 15%;
           height: 20px;
           border-radius: 10px;
           position: relative;
-          margin: 0 15px 12px 0;
+          // margin: 0 15px 12px 0;
           img {
             width: 15px;
             height: 15px;
@@ -275,16 +303,5 @@ export default {
     }
   }
 }
-.backdrop span:nth-child(1){
-     background: #D4D1CC;
-}
-.backdrop span:nth-child(2){
-     background: #BAB1A8;
-}
-.backdrop span:nth-child(3){
-     background: #BCC1BB;
-}
-.backdrop span:nth-child(4){
-     background: #BABEC1;
-}
+
 </style>
