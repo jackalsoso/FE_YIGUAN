@@ -445,13 +445,13 @@ export default {
       let _this = this;
       this.resource.forEach(function(item) {
         if (Object.is(item.form, "fbx")) {
-          let file_path = "/resource/" + item.id + ".FBX";
+          let file_path = "./../../resource/" + item.id + ".FBX";
           console.log(file_path);
           _this.loader(file_path, function(element) {
             _this.frame_kind.set(item.id, element);
           });
         } else if (Object.is(item.form, "texture")) {
-          let file_path = "/resource/" + item.id + ".jpg";
+          let file_path = "./../../resource/" + item.id + ".jpg";
           console.log(file_path);
           _this.image_loader(file_path, function(element) {
             _this.frame_kind.set(item.id, element);
@@ -526,7 +526,7 @@ export default {
         function(object) {
           object.traverse(function(child) {
             if (child instanceof THREE.Mesh) {
-              let name = "/resource/"+that.gallery_name+"/" + child.name + "VRayCompleteMap.jpg ";//VRayCompleteMap.jpg   bakingmaps.jpg
+              let name = "./../../resource/"+that.gallery_name+"/" + child.name + "VRayCompleteMap.jpg ";//VRayCompleteMap.jpg   bakingmaps.jpg
               let lightMap = new THREE.TextureLoader().load(name);
               if (Array.isArray(child.material)) {
                 child.material.forEach(function(mat) {
