@@ -11,6 +11,7 @@
         <img v-if="angle == '0'" class="qiu" src="@/static/img/3D.png" @click="bz5('1')" />
         <img v-if="angle == '1'" class="qiu" src="@/static/img/2D.png" @click="bz5('0')" />
         <span class="upload" @click="$router.push('/upload')">上传画作</span>
+        <img v-show="isShowJt" class="zx_jt" src="@/static/img/zx_jt.gif" alt="">
       </div>
     </div>
     <div class="model">
@@ -33,7 +34,7 @@
         <div class="type">画框类别</div>
         <div class="choose" v-if="isShowHk">
           <label>画框类型:</label>
-          <van-radio-group v-model="radio" direction="horizontal">
+          <van-radio-group v-model="radio" direction="horizontal" @change="chooseStyle">
             <van-radio name="1">欧式</van-radio>
             <van-radio name="2">中式</van-radio>
             <van-radio name="3">极简</van-radio>
@@ -127,6 +128,7 @@ export default {
       isShowBz: false,
       gouH: 0,
       isThree: false,
+      isShowJt: false,
       wallpapers:[
         {
           color:'#D4D1CC',
@@ -214,6 +216,13 @@ export default {
     this.setOpus()
   },
   methods: {
+    chooseStyle(){
+      console.log('选择radio');
+      this.isShowJt = true;
+      setTimeout(() => {
+        this.isShowJt = false;
+      },3000);
+    },
     setOpus(){
       Api.galleryDetailByMe([{},0,20]).then( res => {
         let _data = res[1][0].picturies, _arr = []
@@ -235,6 +244,10 @@ export default {
     },
     changeBG(item){
       this.wallpaper = item.key
+      this.isShowJt = true;
+      setTimeout(() => {
+        this.isShowJt = false;
+      },3000);
     },
     childstate(item) {
       console.log(111111);
@@ -324,6 +337,13 @@ export default {
         color: #fff;
         text-align: center;
         line-height: 28px;
+      }
+      .zx_jt{
+        width: 48px;
+        height: 48px;
+        position: absolute;
+        right: 30px;
+        top: 60px;
       }
     }
   }
