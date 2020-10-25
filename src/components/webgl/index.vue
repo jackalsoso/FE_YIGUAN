@@ -202,7 +202,7 @@ export default {
     load_gallery(name) {
       this.gallery_name = name;
       this.loader(
-        "/resource/" + this.gallery_name + "/gallery.FBX",
+        "./../../resource/" + this.gallery_name + "/gallery.FBX",
         this.scene_load
       );
     },
