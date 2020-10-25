@@ -18,7 +18,7 @@
             <label>{{val.name}}</label>
             <span>{{val.score}}分</span>
           </div>
-          <div class="num">30个画框</div>
+          <div class="num">建议最多30个画框</div>
         </div>
       </div>
     </div>

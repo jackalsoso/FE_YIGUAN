@@ -5,14 +5,14 @@ Vue.use(Vuex);
 
 
 const state = {
-  tabIndex: 0,
-  member_id: 1
+  upload_list: [],
+  addIndex: 0,
 	
 }
 	
 const getters = {
-	//get_choose_hall_id: state => state.choose_hall_id,
-
+	get_upload_list: state => state.upload_list,
+  get_add_index: state => state.addIndex
 }
 	
 const actions = {
@@ -25,10 +25,12 @@ const actions = {
 }
 	
 const mutations = {
-	set_tabIndex: (state,index) => {
-		state.tabIndex = index;
+	set_upload_list: (state,data) => {
+		state.upload_list = data;
 	},
-	
+	set_add_index: (state,index) => {
+    state.addIndex = index;
+  }
 	
 	
 }

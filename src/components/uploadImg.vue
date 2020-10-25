@@ -7,6 +7,7 @@
 import Api from "@/api/gallery/index";
 import Exif from 'exif-js'
 import axios from 'axios'
+import { mapState,mapMutations, mapGetters } from 'vuex'
 export default {
   name: 'upload',
   model: {
@@ -20,21 +21,27 @@ export default {
         return []
       }
     },
-    addIndex: {
-      type: Number,
-      default: 0
-    }
   },
   data() {
     return {
       //ossUrl: "http://exhall.dev.yiyiny.com/works/policy",
       ossUrl: "api/works/policy",
       ossData: [],
+      addIndex: 0,
     }
   },
+  computed:{
+    ...mapGetters('gallery',{
+      get_add_index: 'get_add_index'
+    })
+  },
   methods: {
+    ...mapMutations('gallery',{
+      set_add_index: 'set_add_index'
+    }),
     beforeUpload(file){
       return new Promise((resolve) => {
+        this.addIndex = this.get_add_index;
         if(Array.isArray(file)){//判断是否是数组
           file.forEach(() => {
             let params = ['jpg']
@@ -243,10 +250,10 @@ export default {
         console.log('上传oss成功',res);
         let ossPath = `${res.config["url"]}/${ossData.key}`;
         console.log('ossPath',ossPath)
-        let i = this.addIndex + 1;
+        this.addIndex = this.addIndex + 1;
         this.uploadList.push({
           image: ossPath,
-          title: `作品${i}`,
+          title: `作品${this.addIndex}`,
           desc: "",
           sound: "",
           video: "",
@@ -254,7 +261,9 @@ export default {
           catId: '',
         });
         console.log('更新uploadList数据',this.uploadList);
-        _this.$emit('uploadData',i);
+        console.log('添加index',this.addIndex);
+        _this.$emit('uploadData');
+        _this.set_add_index(this.addIndex);
       });
     }
   }

@@ -92,7 +92,7 @@
             <take-photo @takePhotoData="takePhotoData" />
           </span>
           <span>相册选择
-            <upload-img v-model="uploadList" :addIndex="add_index" @uploadData="uploadData" />
+            <upload-img v-model="uploadList" @uploadData="uploadData" />
           </span>
           <span>......</span>
         </div>
@@ -152,7 +152,8 @@ import Api from '@/api/gallery/index';
 import uploadImg from '@/components/uploadImg';
 import takePhoto from '@/components/takePhoto';
 import merge from 'webpack-merge';
-export default {
+import { mapGetters,mapMutations } from 'vuex'
+ export default {
   name: "upload",
   components: {
     uploadImg,
@@ -178,14 +179,21 @@ export default {
       ossImgUrl: '',
       work_list: [],
       uploadList: [],
-      add_index: 0,
     };
+  },
+  computed:{
+    ...mapGetters('gallery',{
+      get_upload_list: 'get_upload_list'
+    })
   },
   created() {
     this.ossImgUrl = window['ossImgUrl'];
     this.init();
   },
   methods: {
+    ...mapMutations('gallery',{
+      set_upload_list: 'set_upload_list'
+    }),
     batchRemove(){
       let obj = {
         wList: this.work_list,
@@ -204,6 +212,7 @@ export default {
       this.uploadList.splice(i,1);
     },
     toEditHistory(v,i){
+      this.set_upload_list(this.work_list);
       let obj = {
         type: 'history',
         key: i,
@@ -214,6 +223,7 @@ export default {
       } });
     },
     toEditAdd(v,i){
+      this.set_upload_list(this.uploadList);
       let obj = {
         type: 'add',
         key: i,
@@ -223,8 +233,7 @@ export default {
         obj: JSON.stringify(obj)
       } });
     },
-    uploadData(i){
-      this.add_index = i;
+    uploadData(){
       this.isShowAdd = false;
     },
     takePhotoData(list){
@@ -233,17 +242,25 @@ export default {
     },
     init(){
       Api.galleryDetailByMe([{},0,20]).then( res => {
-        this.galleryInfo = res[1][0];
-        this.work_list = res[1][0].picturies;
+        if(res[1].length){
+          this.galleryInfo = res[1][0];
+          this.work_list = res[1][0].picturies;
+        }
+        console.log('编辑后的update',this.uploadList);
         this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
         if( typeof this.$route.query.obj !== 'undefined'){
           let obj = JSON.parse(this.$route.query.obj);
+          let save_list = this.get_upload_list;
           console.log('编辑obj',obj);
           if(obj.type === 'history'){
-            this.work_list.splice(obj.key,1,obj[obj.key]);
+            save_list.splice(obj.key,1,obj[obj.key]);
+            this.work_list = save_list;
+            this.set_upload_list([]);
           }else if(obj.type === 'add'){
-            this.uploadList.splice(obj.key,1,obj[obj.key]);
+            save_list.splice(obj.key,1,obj[obj.key]);
+            this.uploadList = save_list;
             console.log('编辑完成list',this.uploadList);
+            this.set_upload_list([]);
           }
         }
         if( typeof this.$route.query.delObj !== 'undefined'){

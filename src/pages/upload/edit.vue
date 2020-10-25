@@ -59,11 +59,11 @@
     </div>
 
     <div class="submit-but">
-      <span @click="confirmEdit">
-        <i>确认</i>
-      </span>
       <span @click="cancel">
         <i>取消</i>
+      </span>
+      <span @click="confirmEdit">
+        <i>确认</i>
       </span>
     </div>
 
@@ -146,6 +146,7 @@ export default {
     },
     confirmEdit(){
       let obj = JSON.stringify(this.obj);
+      console.log('编辑完成',obj);
       this.$router.push({ path: '/upload', query: {
         obj: obj
       } });
