@@ -202,8 +202,6 @@ export default {
   height: 100vh;
   overflow-x: hidden;
   position: relative;
-  /* display: flex; */
-  /* justify-content: flex-end; */
 }
 .top {
   width: 100%;

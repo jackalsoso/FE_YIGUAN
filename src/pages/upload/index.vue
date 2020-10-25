@@ -138,7 +138,7 @@
 
     <!-- 确认上传 -->
     <div class="addPop" v-if="isShowProgress == true">
-      <div class="progress" @click="$router.push('/showGallery')">
+      <div class="progress" @click="$router.back(-1)">
         <img src="@/static/img/jindu-logo.png" alt="" />
         <div class="hint">作品上传中...</div>
         <van-progress :percentage="scaleNum" :show-pivot="true" color="#F2630D" />
@@ -234,12 +234,6 @@ export default {
     init(){
       Api.galleryDetailByMe([{},0,20]).then( res => {
         this.galleryInfo = res[1][0];
-        //let list = [];
-        // res[1].picturies.forEach( v => {
-        //   list.push(Object.assign(v,{
-        //     mmid: res[1].mmId
-        //   }));
-        // });
         this.work_list = res[1][0].picturies;
         this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
         if( typeof this.$route.query.obj !== 'undefined'){
@@ -325,7 +319,7 @@ export default {
           this.isShowProgress = false;
           this.$toast.success('上传成功');
           setTimeout(() => {
-            this.$router.push('/showGallery');
+            this.$router.back(-1);
           },1500);
         } //获取重新赋值
         this.scaleNum = progressnuw;
