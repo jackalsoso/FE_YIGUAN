@@ -9,20 +9,20 @@
         <!-- <span class="upload" @click="$router.push('/publishLink')">生成画廊</span> -->
       </div>
     </div>
-    <webgl
+    <!-- <webgl
       style="width: 100%; height: 100%; position: absolute;top:0; z-index: 1000;"
       ref="webgl"
       :sceneLoad="addpic"
-    ></webgl>
+    ></webgl> -->
   </div>
 </template>
 
 <script>
-import webgl from "../webgl/index";
+// import webgl from "../webgl/index";
 export default {
   name: 'nochangeD',
   components: {
-    webgl,
+    // webgl,
   },
   data(){
     return{

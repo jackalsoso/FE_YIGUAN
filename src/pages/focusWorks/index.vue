@@ -19,11 +19,11 @@
         </span>
       </div>
     </div>
-    <webgl
+    <!-- <webgl
       style="width: 100%; height: 100%; position: absolute;top:0; z-index: 1000;"
       ref="webgl"
       :sceneLoad="addpic"
-    ></webgl>
+    ></webgl> -->
     <van-popup v-model="showPicker" round position="bottom">
       <label class="share-tit">分享至</label>
       <div class="wrap">
@@ -58,11 +58,11 @@
 </template>
 
 <script>
-import webgl from "../webgl/index";
+// import webgl from "../webgl/index";
 export default {
   name: "focusWorks",
   components: {
-    webgl,
+    // webgl,
   },
   data() {
     return {

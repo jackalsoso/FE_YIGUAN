@@ -5,7 +5,7 @@ import store from './vuex'
 import 'lib-flexible'
 import './plugins/vant'
 import './utils/getToken'
-import WebGL from '@/pages/webgl/index.vue'
+import WebGL from '@/components/webgl/index.vue'
 
 // import * as three from 'three'
 // import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';

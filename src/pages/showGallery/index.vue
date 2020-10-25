@@ -23,7 +23,7 @@
           @click="change3D"
         />
         <!-- <span class="upload" @click="$router.push('/upload')">上传画作</span> -->
-        
+
         <span class="upload" @click="$router.push('/publishLink')"
           >生成画廊</span
         >
@@ -33,11 +33,11 @@
       <span class="addhk3" @click="changewall3">墙纸3</span>
       <span class="addhk4" @click="changewall4">墙纸4</span>
     </div>
-    <webgl
+    <!-- <webgl
       style="width: 100%; height: 100%; position: absolute;top:0; z-index: 1000;"
       ref="webgl"
       :sceneLoad="addpic"
-    ></webgl>
+    ></webgl> -->
   </div>
 </template>
 
@@ -46,11 +46,11 @@
 //   console.log("Enter");
 // }
 
-import webgl from "../webgl/index";
+// import webgl from "../webgl/index";
 export default {
   name: "showGallery",
   components: {
-    webgl,
+    // webgl,
   },
   data() {
     return {

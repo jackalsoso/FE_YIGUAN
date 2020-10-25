@@ -9,7 +9,7 @@ let BASEURL= "";
 //       break;
 // }
 
-if (window.location.origin.indexOf("192.168.0.111:8088") != -1) {
+if (window.location.origin.indexOf("192.168.0.104:8088") != -1) {
   BASEURL = "/api";
 } else if (window.location.origin.indexOf("p2.dev.yiyiny.com") != -1) {
   BASEURL = "http://exhall.dev.yiyiny.com";
