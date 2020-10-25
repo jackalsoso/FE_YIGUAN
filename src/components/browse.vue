@@ -1,12 +1,12 @@
 <template>
-  <div class="content">
+  <div class="browse-popup">
     <div class="search-warp">
       <div class="search">
         <img
           class="back"
           src="@/static/img/back-icon2.png"
           alt=""
-          @click="$router.back(-1)"
+          @click="$emit('back')"
         />
         <i></i>
       </div>
@@ -120,9 +120,13 @@ export default {
   background-color: #cbd1d9;
   margin-bottom: 3px;
 }
-.content {
+.browse-popup {
+  width: 100%;
+  height: 100%;
+  background: blue;
+
   /deep/ .van-overlay {
-    background: rgba(0, 0, 0, 0);
+    background: red;
   }
   .search-warp {
     background: none;
@@ -148,7 +152,7 @@ export default {
   }
   width: 100%;
   height: 100%;
-  background: url(../../static/img/01.jpg) center / cover no-repeat;
+  background: url(~@/static/img/01.jpg) center / cover no-repeat;
   background-size: 100% 100%;
   position: relative;
   .edit {

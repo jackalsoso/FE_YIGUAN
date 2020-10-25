@@ -1,21 +1,5 @@
 <template>
   <div class="content">
-    <div class="nnn" style="position: absolute;left:0;top:500px;z-index:1111;transform:scale(3)">
-      <button
-        @click="bz5()"
-        style="width: 70px;height:20px;position: absolute;top:40px;left:70px;font-size:10px"
-      >
-        添加所有画
-      </button>
-    <button
-      @click="bz4()"
-      style="width: 70px;height:20px;position: absolute;top:40px;left:70px;font-size:10px"
-    >
-      删除所有画
-    </button>
-
-
-  </div>
     <div class="search-warp">
       <div class="search">
         <img
@@ -26,7 +10,7 @@
         />
         <img v-if="angle == '0'" class="qiu" src="@/static/img/3D.png" @click="bz5('1')" />
         <img v-if="angle == '1'" class="qiu" src="@/static/img/2D.png" @click="bz5('0')" />
-        <span class="upload" @click="$router.push('/upload')">上传1画作</span>
+        <span class="upload" @click="$router.push('/upload')">上传画作</span>
       </div>
     </div>
     <div class="model">
@@ -41,7 +25,7 @@
         @gellarstate="gellarstate"
       ></galleryModel>
     </div>
-    <div class="popup-bottom animated fadeInUp">
+    <div v-if="browseShow == 0" class="popup-bottom animated fadeInUp">
       <div class="pop-type">
         <div class="tit" @click="(isShowHk = !isShowHk), (isShowBz = false)">
           <span></span><span></span>
@@ -65,17 +49,79 @@
         </div>
       </div>
     </div>
+    <!-- <browse v-show="browseShow" :data="browseData" @back="" /> -->
+    <div v-if="browseShow == 1" class="imgview" style="z-index: 1001;position: absolute;background-color: red;width: 100%;height: 100%;left: 0;top: 0;">
+      <img :src="browseData.sdata.image" />
+      <van-popup v-model="browseShow" round position="bottom" class="animated fadeInUp">
+        {{browseData}}
+        <div class="edit">
+          <div class="tit-1" @click="browseShow = 0">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="browse">
+            <div class="voice-wrap">
+              <div class="voice">
+                <span>{{browseData.sdata.title}}<img src="@/static/img/voice.png" alt="" /><i>30”</i></span
+                >
+                <span>¥{{browseData.sdata.price}}<img src="@/static/img/car.png" alt=""/></span>
+              </div>
+              <div class="yh">油画</div>
+            </div>
+            <p class="cont">
+              {{browseData.sdata.desc}}
+              <!-- 一个屡受挫折的年轻士兵在一家出售进口商品的店里做伙计，
+              当他打开这个从日本运来的陶器的包装纸后，惊奇地发现里面藏有一幅极富造诣的油画。 -->
+            </p>
+            <!-- <p class="cont">
+              {{ browseData }}
+              本书以日本东京的明治维新和法国巴黎的普法战争为背景，
+              并围绕一幅神秘的油画展开故事情节。小说主要刻画了四个主人
+              公，他们的命运轨迹或多或少地被这幅油画改写......小说将炽热
+              的爱情和充满悬念的故事情节巧妙地结合在一起，艺术的神秘和
+              生活的崎岖交相辉映，表现了艺术对生活的深刻影响。
+            </p> -->
+            <div class="video">
+              <video
+                ref="videoPlay"
+                src=""
+                controls
+                poster="@/static/img/item-2.jpeg"
+              ></video>
+              <img
+                src="@/static/img/play.png"
+                alt=""
+                v-show="!isPlay"
+                @click="play(true)"
+              />
+              <img
+                src="@/static/img/pause.png"
+                alt=""
+                v-show="isPlay"
+                @click="play(false)"
+              />
+            </div>
+          </div>
+        </div>
+      </van-popup>
+    </div>
+
+
   </div>
 </template>
 <script>
+import Api from '@/api/gallery/index';
 import galleryModel from "@/components/galleryModel.vue";
+import browse from "@/components/browse.vue";
 export default {
   name: "galleryDetail",
   components: {
-    galleryModel
+    galleryModel,
+    browse
   },
   data() {
     return {
+      browseShow:0,
+      browseData:{},
       radio: "1",
       isShowHk: false,
       isShowBz: false,
@@ -160,83 +206,38 @@ export default {
           ]
         },
       ],
-      picarr3: [
-        //画作数组   项目地址用本机ip+端口号，图片路径替换成本机ip+端口号
-        {
-          id: "1",
-          url: "https://t9.baidu.com/it/u=1663565633,1824408680&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=0de695044656016edff816350af319a0",
-          type: "0",
-          index: "001",
-          backcolor: 0x000000,
-          sdata:[
-              {aa:1}
-          ]
-        },
-        {
-          id: "2",
-          url: "https://t7.baidu.com/it/u=3228836643,3370352928&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=25b9b98650880a921a64ac299619fd04",
-          type: "0",
-          index: "002",
-          backcolor: 0x000000,
-          sdata:[
-              {aa:1}
-          ]
-        },
-        {
-          id: "3",
-          url: "https://t9.baidu.com/it/u=2502882521,321079790&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=d3b98df2d7fd3e459b40aad9b51ff881",
-          type: "0",
-          index: "003",
-          backcolor: 0x000000,
-          sdata:[
-              {aa:1}
-          ]
-        },
-        {
-          id: "4",
-          url: "https://t9.baidu.com/it/u=1775900009,2371222529&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=0f2d2ed5ce6b2719a589103239b99582",
-          type: "0",
-          index: "004",
-          backcolor: 0x000000,
-          sdata:[
-              {aa:1}
-          ]
-        },
-        {
-          id: "5",
-          url: "https://t7.baidu.com/it/u=2729620587,1095451939&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=a7b72cb757d1818a931cbe3860610d6e",
-          type: "0",
-          index: "023",
-          backcolor: 0x000000,
-          sdata:[
-              {aa:1}
-          ]
-        },
-        {
-          id: "6",
-          url: "https://t9.baidu.com/it/u=2821245368,1313454205&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=92a70e5fac469828d988865209e7f263",
-          type: "0",
-          index: "024",
-          backcolor: 0x000000,
-          sdata:[
-              {aa:1}
-          ]
-        },
-      ],
-
     };
   },
   created() {},
   mounted(){
     this.Gallerynum = 'gallery_1'
+    this.setOpus()
   },
   methods: {
+    setOpus(){
+      Api.galleryDetailByMe([{},0,20]).then( res => {
+        let _data = res[1][0].picturies, _arr = []
+        for(let i in _data){
+          let _index = (parseInt(i) + 1) + ''
+          _index.length == 1 ? _index = '00' + _index : ''
+          _index.length == 2 ? _index = '0' + _index : ''
+          _arr.push({
+            id:i,
+            url:_data[i].image,
+            type: "0",
+            index: _index,
+            backcolor: 0x000000,
+            sdata:_data[i]
+          })
+        }
+        setTimeout((this.picarr = _arr),20000)
+      })
+    },
     changeBG(item){
       this.wallpaper = item.key
     },
     childstate(item) {
       console.log(111111);
-      setTimeout(()=>{this.bz4()},5000)
     },
     //   画廊准备完成的返回信息
     gellarstate(item) {
@@ -244,6 +245,9 @@ export default {
     },
     //点击画作返回信息
     childData(item) {
+      // this.$router.push('/browse')
+      this.browseData = item
+      this.browseShow = 1
       console.log("点击的画作信息:")
       console.log(item);
     },
@@ -273,8 +277,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .content {
+  width: 100%;
+  height: 100%;
   background: #000;
+  .imgview{
+    top:0;
+    left:0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 9;
+    img{
+      width: 100%;
+      height: 100%;
+    }
+  }
   .model{
     width: 100%;
     height: 100%;
@@ -405,5 +424,122 @@ export default {
     }
   }
 }
+
+  /deep/ .van-overlay {
+    // background: red;
+  }
+  .search-warp {
+    background: none;
+    z-index: 2000;
+    .search {
+      background: none;
+      padding: 20px 0;
+      justify-content: space-between;
+      .back {
+        margin-left: 15px;
+      }
+      .upload {
+        width: 74px;
+        height: 28px;
+        background: rgba(241, 99, 13, 1);
+        border-radius: 14px 0px 0px 14px;
+        font-size: 14px;
+        color: #fff;
+        text-align: center;
+        line-height: 28px;
+      }
+    }
+  }
+  .edit {
+    padding-bottom: 15px;
+    .tit-1 {
+      padding: 8px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      span {
+        width: 45px;
+        height: 2px;
+        background-color: #cbd1d9;
+        margin-bottom: 3px;
+      }
+    }
+    .browse {
+      padding: 15px;
+      .voice-wrap {
+        padding-bottom: 15px;
+        border-bottom: 1px solid #dedede;
+        margin-bottom: 15px;
+        .voice {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 5px;
+          span {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            color: #010000;
+            img {
+              width: 17px;
+              height: 15px;
+              margin-left: 8px;
+            }
+            i {
+              font-size: 16px;
+              color: #3d4249;
+              margin-left: 3px;
+            }
+            &:last-child {
+              justify-content: flex-end;
+              font-size: 16px;
+              color: #f2630d;
+              img {
+                width: 20px;
+                height: 15px;
+                margin-left: 8px;
+              }
+            }
+          }
+        }
+        .yh {
+          display: inline-block;
+          padding: 3px 10px;
+          background-color: #efeeec;
+          font-size: 10px;
+          color: #6f8191;
+        }
+      }
+      .cont {
+        font-size: 12px;
+        line-height: 25px;
+        color: #3d4249;
+        text-indent: 15px;
+      }
+      .video {
+        width: 305px;
+        height: 140px;
+        margin: 15px auto 0;
+        border-radius: 14px;
+        overflow: hidden;
+        position: relative;
+        video {
+          width: 100%;
+          height: 100%;
+          object-fit: fill;
+        }
+        img {
+          width: 31px;
+          height: 31px;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
+    }
+  }
 
 </style>
