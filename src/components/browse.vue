@@ -123,10 +123,8 @@ export default {
 .browse-popup {
   width: 100%;
   height: 100%;
-  background: blue;
-
   /deep/ .van-overlay {
-    background: red;
+    background: none;
   }
   .search-warp {
     background: none;
