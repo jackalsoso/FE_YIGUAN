@@ -138,7 +138,7 @@
 
     <!-- 确认上传 -->
     <div class="addPop" v-if="isShowProgress == true">
-      <div class="progress" @click="$router.back(-1)">
+      <div class="progress">
         <img src="@/static/img/jindu-logo.png" alt="" />
         <div class="hint">作品上传中...</div>
         <van-progress :percentage="scaleNum" :show-pivot="true" color="#F2630D" />
@@ -336,7 +336,7 @@ import { mapGetters,mapMutations } from 'vuex'
           this.isShowProgress = false;
           this.$toast.success('上传成功');
           setTimeout(() => {
-            this.$router.back(-1);
+            this.$router.push({ path: `/gallery/1` })
           },1500);
         } //获取重新赋值
         this.scaleNum = progressnuw;

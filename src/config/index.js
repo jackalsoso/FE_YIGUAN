@@ -1,4 +1,4 @@
-let BASEURL= "/api";
+let BASEURL= "";
 
 // switch (process.env.NODE_ENV) {
 //     case 'development':
@@ -9,14 +9,14 @@ let BASEURL= "/api";
 //       break;
 // }
 
-// if (window.location.origin.indexOf("192.168.0.104:8088") != -1) {
-//   BASEURL = "/api";
-// } else if (window.location.origin.indexOf("p2.dev.yiyiny.com") != -1) {
-//   BASEURL = "http://exhall.dev.yiyiny.com";
-// } else if (window.location.origin.indexOf("p2.yiyiny.com") != -1) {
-//   BASEURL = "http://exhall.yiyiny.com";
-// } else {
-//   console.error("当前origin：",window.location.origin);
-// }
+if (window.location.origin.indexOf("localhost:8088") != -1) {
+  BASEURL = "/api";
+} else if (window.location.origin.indexOf("p2.dev.yiyiny.com") != -1) {
+  BASEURL = "http://exhall.dev.yiyiny.com";
+} else if (window.location.origin.indexOf("p2.yiyiny.com") != -1) {
+  BASEURL = "http://exhall.yiyiny.com";
+} else {
+  console.error("当前origin：",window.location.origin);
+}
 // BASEURL = "/api";
 export default BASEURL;

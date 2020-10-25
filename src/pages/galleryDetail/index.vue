@@ -51,10 +51,9 @@
       </div>
     </div>
     <!-- <browse v-show="browseShow" :data="browseData" @back="" /> -->
-    <div v-if="browseShow == 1" class="imgview" style="z-index: 1001;position: absolute;background-color: red;width: 100%;height: 100%;left: 0;top: 0;">
+    <div v-if="browseShow == 1" class="imgview" style="z-index: 1001;position: absolute;width: 100%;height: 100%;left: 0;top: 0;">
       <img :src="browseData.sdata.image" />
       <van-popup v-model="browseShow" round position="bottom" class="animated fadeInUp">
-        {{browseData}}
         <div class="edit">
           <div class="tit-1" @click="browseShow = 0">
             <span></span><span></span><span></span>
@@ -155,59 +154,6 @@ export default {
       wallpaper: "wall1_1", //壁纸类型'wall1_1'，'wall1_2'，'wall1_3'，'wall1_4'，'wall1_5'
       picarr: [],
       angle: "0",
-      picarr2: [
-        //画作数组   项目地址用本机ip+端口号，图片路径替换成本机ip+端口号
-        {
-          id: "1",
-          url: "https://t7.baidu.com/it/u=3616242789,1098670747&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=1ec3f94cf7d41059ec8657d22876a34e",
-          type: "0",
-          index: "001",
-          backcolor: 0x000000,
-          sdata:[//sdata是soso那边的数据
-              {aa:1}
-          ]
-        },
-        {
-          id: "2",
-          url: "https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=9a6b7cc24c24500fcf0547f9467bb88e",
-          type: "0",
-          index: "002",
-          backcolor: 0x000000,
-          sdata:[
-              {aa:1}
-          ]
-        },
-        {
-          id: "3",
-          url: "https://t9.baidu.com/it/u=583874135,70653437&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=ca63e5a3570a5e513b7615ee2c86e403",
-          type: "0",
-          index: "003",
-          backcolor: 0x000000,
-          sdata:[
-              {aa:1}
-          ]
-        },
-        {
-          id: "4",
-          url: "https://t9.baidu.com/it/u=1307125826,3433407105&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=4f2853904eac581fcefa6d8ea207b3b3",
-          type: "0",
-          index: "004",
-          backcolor: 0x000000,
-          sdata:[
-              {aa:1}
-          ]
-        },
-        {
-          id: "5",
-          url: "https://t9.baidu.com/it/u=2268908537,2815455140&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1604154212&t=4986454806dfc9e69edaa64965040789",
-          type: "0",
-          index: "023",
-          backcolor: 0x000000,
-          sdata:[
-              {aa:1}
-          ]
-        },
-      ],
     };
   },
   created() {},
@@ -249,11 +195,12 @@ export default {
         this.isShowJt = false;
       },3000);
     },
-    childstate(item) {
-      console.log(111111);
+    childstate() {
+      // console.log(111111);
     },
     //   画廊准备完成的返回信息
     gellarstate(item) {
+      // debugger
       console.log(item);
     },
     //点击画作返回信息
@@ -446,7 +393,7 @@ export default {
 }
 
   /deep/ .van-overlay {
-    // background: red;
+    background: none;
   }
   .search-warp {
     background: none;
