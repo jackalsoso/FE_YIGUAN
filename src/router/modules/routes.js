@@ -191,6 +191,52 @@ const routes = [
       keepAlive: false
     }
   },
+  // 新添加页面
+  {
+    path: '/myHistory',
+    name: 'myHistory',
+    component: () => import('@/pages/personal/myHistory'),
+    meta: {
+      title: '历史浏览',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/myShen',
+    name: 'myShen',
+    component: () => import('@/pages/personal/myShen'),
+    meta: {
+      title: '审核进度',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/myHelp',
+    name: 'myHelp',
+    component: () => import('@/pages/personal/myHelp'),
+    meta: {
+      title: '帮助反馈',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/myHelpmsg',
+    name: 'myHelpmsg',
+    component: () => import('@/pages/personal/myHelpmsg'),
+    meta: {
+      title: '帮助反馈详情',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/myOpinion',
+    name: 'myOpinion',
+    component: () => import('@/pages/personal/myOpinion'),
+    meta: {
+      title: '意见反馈',
+      keepAlive: false
+    }
+  },
 
 
 ]
